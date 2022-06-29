@@ -1,0 +1,52 @@
+VIEW INPUTNYA :
+
+ <tr><td width='200'>Nama Buku </td><td><input type="text" class="form-control" name="id_buku" style="width: 200px" id="id_buku" placeholder="Nama Buku" /></td>
+
+             <td><input type="text" class="form-control" name="field_buku" style="width: 200px" id="field_buku" placeholder="Nama Buku" /></td>
+         </tr>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+JAVASCRIPTNYA :
+<script src="<?php echo base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/datatables/jquery.dataTables.js') ?>"></script>
+<script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
+
+<script type="text/javascript">
+     $(function() {
+
+         $("#id_buku").autocomplete({
+             source: "<?php echo base_url() ?>/index.php/peminjaman_buku/detail_buku",
+             minLength: 1, 
+        select: function(event,ui){
+        $("#id_buku").trigger('blur');
+        $("#id_buku").val(ui.item.value);
+        pilih_buku();
+    }
+         });
+         });
+
+     function pilih_buku(){
+        var id_buku = $("#id_buku").val();
+        $.ajax({
+                success: function()
+                {
+                    $("#field_buku").val(id_buku);
+                   
+                }
+            });    
+
+    }
+    </script>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+PHP FILE/CONTROLLER: 
+     function detail_buku(){
+        $s = "SELECT nama_buku FROM tb_buku";
+        $queri= $this->db->query($s);
+            foreach ($queri->result() as $nama) {
+                $return_arr[] = $nama->nama_buku;
+            }
+    echo json_encode($return_arr);
+    }

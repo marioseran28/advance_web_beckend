@@ -1,0 +1,125 @@
+TOMBOL DAN INPUT TEXTNYA:
+
+<table>
+                <tr>
+                  <td style="padding-left: 600px;"><a data-toggle="modal" data-target="#search-data" class="btn btn-ligth" style="background: white; border-color: #DCDCDC;"><i class="fa fa-search fa-lg" style="color: #DCDCDC;"></i></a></td>
+                  <td><input type="text" style="width: 300px;" class="form-control" name="search" id="search" placeholder="Telusuri Member" data-toggle="modal" data-target="#search-data" /></td>
+                </tr>
+              </table>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+MODALNYA :
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="search-data" class="modal fade">
+    <div class="modal-dialog">
+      <div class="col-md-8">
+        <div style ="margin-left:557px; margin-top: 77px" class="box box-light box-solid">
+          <div class="box-header with-border">
+                <table><tr><td><a class="btn btn-ligth" style="background: white; border-color: #DCDCDC;"><i class="fa fa-search fa-lg" style="color: black;"></i></a></td><td><input type="text" style="width: 300px;" class="form-control" onkeyup="data_member_search()" name="search_m" id="search_m" placeholder="Telusuri Member"/></td></tr>
+                </table>
+              </div>
+              <div class="modal-body" style="height: 500px; overflow-y: auto;">
+          <table class='table table-bordered'>
+          <p id="garis_1" style="border-style: solid;  color: white;"></p>
+          <tbody id="list_member_search">
+           <?php
+            $member_data =  $this->db->query("SELECT * FROM tb_member GROUP BY id_member ASC LIMIT 5")->result();
+            foreach ($member_data as $tb_member)
+            {
+               
+              ?>
+                <tr>
+     <td style="width: 70px;"><img src="<?php echo base_url()?>assets/gambar/<?php echo ($tb_member->images);?>" width="50" height="50" alt="<?php echo $tb_member->images ?>" /></td>
+      <td><b style="font-size: 15px;">Nama : <?php echo $tb_member->nama_member ?></b><br>
+      Alamat : <?php echo $tb_member->alamat ?><br>
+      No Hp : <?php echo $tb_member->no_hp ?></td></tr>
+
+            <?php
+        }
+            ?>
+            </tbody>
+          </table>
+       </div></div>
+</div>
+</div>
+</div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+JAVASCRIPTNYA :
+
+<script type="text/javascript">
+function data_member_search(){
+    var search_m = $("#search_m").val();
+
+    if (search_m!=="") {
+        $.ajax({
+            url:"<?php echo base_url() ?>index.php/tb_member/list_nama_d_search",
+            data:"search_m="+search_m,
+            success: function(html)
+            {
+              data = JSON.parse(html);
+              isi_tabel = '';
+              data.forEach(function(item, index){
+                  isi_tabel+=`
+                    <tr>
+                      <td style="width: 70px;"><img src="<?php echo base_url() ?>assets/gambar/`+ item.images +`" width="50" height="50" alt=" `+ item.images +`" /></td>
+                      <td><b style="font-size: 15px;">Nama : `+ item.nama_member +`</b><br>
+                      Alamat : `+ item.alamat +`<br>
+                      No Hp : `+ item.no_hp +`</td>
+                    </tr>
+                  `;
+
+              });                     
+              $('#list_member_search').html(isi_tabel);
+            }
+        });
+        
+      } else if(search_m==""){
+        $.ajax({
+            url:"<?php echo base_url() ?>index.php/tb_member/list_nama_semua",
+            success: function(html)
+            {
+              data = JSON.parse(html);
+              isi_tabel = '';
+              data.forEach(function(item, index){
+                  isi_tabel+=`
+                    <tr>
+                      <td style="width: 70px;"><img src="<?php echo base_url() ?>assets/gambar/`+ item.images +`" width="50" height="50" alt=" `+ item.images +`" /></td>
+                      <td><b style="font-size: 15px;">Nama : `+ item.nama_member +`</b><br>
+                      Alamat : `+ item.alamat +`<br>
+                      No Hp : `+ item.no_hp +`</td>
+                    </tr>
+                  `;
+
+              });                     
+              $('#list_member_search').html(isi_tabel);
+            }
+        });
+
+      } else {
+
+      }
+    }
+    </script>
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+FILE PHP/CONTROLLERNYA :
+function list_nama_semua(){        
+        $hasil=$this->db->query("SELECT * FROM tb_member GROUP BY id_member ASC LIMIT 5");
+        //print_r($hasil->result());
+        echo json_encode($hasil->result());
+    }
+    
+    function list_nama_d_search(){
+        $search_m  = $this->input->get('search_m');
+        
+        $hasil=$this->db->query("SELECT * FROM tb_member
+            WHERE nama_member LIKE '%$search_m%' 
+            OR alamat LIKE '%$search_m%'
+            OR no_hp LIKE '%$search_m%'");
+        //print_r($hasil->result());
+        echo json_encode($hasil->result());
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////

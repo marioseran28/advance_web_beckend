@@ -1,0 +1,15 @@
+BUTTONNYA :
+
+ <tr>
+           <td><?php echo substr($deskripsi_buku, 0, $hasil_final)?><button class="btn btn-link" id="load_more" name="load_more" onclick="load_more('<?php echo $deskripsi->id_buku ?>')" > READ MORE</button>
+           <button id="loading" class="btn btn-link" style="display:none; color: red;">Loading...<i class="fa fa-spinner" aria-hidden="true"></i>
+</button></td>
+          </tr>
+///////////////////////////////////////////////////////////////////////////////////////////////
+JAVASCRIPTNYA:
+ function load_more(id_buku){
+    $("#loading").fadeIn("fast");
+    $("#load_more").css("display","none");
+    $("#loading").fadeOut("slow");
+    load_morekata(id_buku);
+  }

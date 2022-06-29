@@ -1,0 +1,82 @@
+form inputnya :
+
+<tr><td width='200'>Akun Induk <?php echo form_error('akun_induk') ?></td><td>
+        <div class="input-group">
+          <div class="input-group-btn">
+            <button data-toggle="modal" data-target="#modal_akun" type="button" class="btn btn-primary" title="Tampilkan data"><i class="fa fa-folder-open-o"></i></button>
+          </div>
+          <input type="text" name="akun_induk" style="width: 80px" onfocus="load()" id="akun_induk" class="form-control" placeholder="Kode" readonly value="<?php echo $akun_induk; ?>" />
+
+          <input type="text" name="nama_akuninduk" onfocus="load()" style="width: 280px" id="nama_akuninduk" class="form-control" placeholder="Nama Akun" readonly value="<?php echo $nama_akuninduk; ?>"></input>
+          <input type="text" name="level1" style="width: 60px" id="level1" class="form-control" placeholder="Level Induk" readonly />
+
+//////////////////////////////////////////////////////////////
+
+modalnya :
+<div class="modal fade" id="modal_akun" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="row" style="margin-left: 2px; margin-right: 2px; ">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Cari Akun</h4>
+                    </div>
+                    <div class="modal-body">
+            <table id="xakun" class="table table-bordered table-hover table-striped">
+        <thead>
+                    <tr>
+                        
+                        <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                        <th>Nama Akun</th>
+                        <th>Action</th>
+                        
+                      </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                  
+                    $akun =  $this->db->query("SELECT * FROM tb_akun ORDER BY SUBSTRING(kode_akun, 1,7) ASC");
+                    foreach($akun->result() as $d1){
+             
+                ?>
+                    <tr>
+                        
+                        <td><?php echo substr($d1->kode_akun,0,1); ?></td>
+                        <td><?php echo substr($d1->kode_akun,1,1) ?></td>  
+                        <td><?php echo substr($d1->kode_akun,2,2) ?></td>
+                        <td><?php echo substr($d1->kode_akun,4,2) ?></td>
+                        <td><?php echo substr($d1->kode_akun,6,2) ?></td>
+                        <td width="200px"><?php echo $d1->nama_akun ?></td>
+
+                        <td><center><button class="btn btn-danger btn-xs" onclick="pilih_akun('<?php echo $d1->kode_akun ?>','<?php echo $d1->nama_akun ?>','<?php echo $d1->level ?>')" data-dismiss="modal">PILIH</button></center></td>
+                    </tr>
+                <?php
+                    }
+                ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+//////////////////////////////////////////////////////////////
+
+
+javascriptnya :
+ <script type="text/javascript">
+  function pilih_akun(nama,kode,lvl){
+    $("#akun_induk").val(nama);
+    $("#nama_akuninduk").val(kode);
+    $("#level1").val(lvl);
+
+  }
+  </script>
+  /////////////////////////////////////
+
+  ENJOY YOUR CODING GUYS, AND HOPE U DID IT WELL...:)

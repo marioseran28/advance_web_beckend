@@ -1,0 +1,87 @@
+HTML MENAMPILKAN JAM DAN TANGGAL :
+<div id="jam_aktif">
+                <label id="jam"></label> :
+                <label id="menit"></label> :
+                <label id="detik"></label> 
+                <label id="pm_am"></label>
+            </div>
+
+            <?php 
+            $tgl = date("Y-m-d");
+            function merubah_tanggal($tgl){
+    $bulan = array (
+        1 =>   'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    );
+    $pecahkan = explode('-', $tgl);
+    return $pecahkan[2] . '/' . $bulan[ (int)$pecahkan[1] ] . '/' . $pecahkan[0];
+} 
+?>
+            <div id="tgl_hari_ini">
+                <label><?php echo merubah_tanggal($tgl) ?></label>
+            </div>
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+JAVASCRIPT UNTUK MENAMPILKAN JAM DIGITAL AKTIF:
+<script type="text/javascript">
+    window.setTimeout("jam_aktif()", 1000);
+    function jam_aktif() {
+    var jam_aktif = new Date();
+        setTimeout("jam_aktif()", 1000);
+        var jam = jam_aktif.getHours();
+        var menit = jam_aktif.getMinutes();
+        var detik = jam_aktif.getSeconds();
+
+        //menampilkan am/pm
+        if (jam<12) {
+            document.getElementById("pm_am").innerHTML = 'AM';
+        } else if (jam>12) {
+            document.getElementById("pm_am").innerHTML = 'PM';
+        }
+
+        //memberikan angka 2 digit untuk 0-9 pada JAM
+        if (jam==0) {
+            document.getElementById("jam").innerHTML = '0'+jam;
+        } else if (jam<10) {
+            document.getElementById("jam").innerHTML = '0'+jam;
+        } else if (jam==10) {
+            document.getElementById("jam").innerHTML = jam_aktif.getHours();
+        } else if (jam>10) {
+            document.getElementById("jam").innerHTML = jam_aktif.getHours();
+        } 
+
+        //memberikan angka 2 digit untuk 0-9 pada MENIT
+        if (menit==0) {
+            document.getElementById("menit").innerHTML = '0'+menit;
+        } else if (menit<10) {
+            document.getElementById("menit").innerHTML = '0'+menit;
+        } else if (menit==10) {
+            document.getElementById("menit").innerHTML = jam_aktif.getMinutes();
+        } else if (menit>10) {
+            document.getElementById("menit").innerHTML = jam_aktif.getMinutes();
+        }
+
+        //memberikan angka 2 digit untuk 0-9 pada DETIK
+        if (detik==0) {
+            document.getElementById("detik").innerHTML = '0'+detik;
+        } else if (detik<10) {
+            document.getElementById("detik").innerHTML = '0'+detik;
+        } else if (detik==10) {
+            document.getElementById("detik").innerHTML = jam_aktif.getSeconds();
+        } else if (detik>10) {
+            document.getElementById("detik").innerHTML = jam_aktif.getSeconds();
+        } 
+    }
+</script>
+////////////////////////////////////////////////////////////////////////////////////////////////

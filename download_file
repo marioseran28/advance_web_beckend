@@ -1,0 +1,14 @@
+view/tombolnya :
+ <td><a href="<?php echo site_url('tb_member/download_foto/'.$tb_member->id_member); ?>" data-popup="tooltip" data-placement="top" title="Lihat Data">DOWNLOAD</a></td>
+///////////////////sesuaikan site_urlnya dengan punya kalian
+
+file php/controllernya:
+ public function download_foto($id){
+        $this->load->helper('download');
+        $filedata = $this->db->query("SELECT * FROM tb_member WHERE id_member='$id'"); 
+        foreach($filedata->result() as $data_foto) {
+        $file = 'assets/gambar/'.$data_foto->images;
+        force_download($file, NULL);
+    }
+    }
+/////////////////////////////////////////////////////

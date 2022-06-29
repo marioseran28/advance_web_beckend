@@ -1,0 +1,59 @@
+viewnya :
+
+<tr><td width='200'></td><td id="alert_numeric"></td></tr>
+      <tr>
+       <td width='200'>No Hp <?php echo form_error('no_hp') ?></td><td><input type="text" class="form-control" name="no_hp" id="no_hp" onkeyup="cek_numeric()" placeholder="No Hp" value="<?php echo $no_hp; ?>" /></td></tr>
+///////////////////////////////////////////////////////////
+
+javascriptnya :
+<script type="text/javascript">
+function cek_numeric() {
+var no_hp = $("#no_hp").val();
+if (no_hp!=="") {
+    $.ajax({
+      url:"<?php echo base_url() ?>index.php/tb_member/cek_numerik",
+      data:"no_hp="+ no_hp ,
+      success: function(html) { 
+        $('#alert_numeric').html(html);
+            }
+      });
+  } else {
+    $.ajax({
+      url:"<?php echo base_url() ?>index.php/tb_member/cek_numerik",
+      data:"no_hp="+ 0 ,
+      success: function(html) { 
+        $('#alert_numeric').html(html);
+            }
+      });
+  }
+}
+</script>
+
+phpnya/controllernya :
+function cek_numerik(){
+        $no_hp = $_GET['no_hp'];
+        $cek_nilai = is_numeric($no_hp);
+        if($cek_nilai!==true) {
+            echo "
+            <tr>
+                <td><b><label style='color: red;'>$no_hp</label> bukan bilangan numaric</b></td>
+                </tr>";
+           
+        } else if($cek_nilai=="0") {
+             echo "
+            <tr>
+                <td><b></b></td>
+                </tr>";
+        } else {
+            echo "
+            <tr>
+                <td><b></b></td>
+                </tr>";
+        }
+        
+           
+    }
+///////////////////////////////////////////
+
+Hope can help u guys, to fix your problem. 
+Don't forget to subscribe VLY Studio for more interesting coding!!:)

@@ -1,0 +1,75 @@
+HTML MENAMPILKAN DATA JUDUL: 
+<tbody id="for_title">
+            <tr><td width='200'>TITLE </td><td><?php echo $judul ?> <a class="btn btn-light" style="color: black;" title="EDIT TITLE" onclick="set_edit_title()"><i class="fa fa-pencil-square-o"></i></a></td></tr>
+        </tbody>
+        <input type="hidden" class="form-control" name="id_to_do" id="id_to_do" value="<?php echo $id_to_do ?>" />
+//////////////////////////////////////////////////////////////////////////////
+
+JAVASCRIPT UNTUK MENAMPILKAN FORM EDIT DATA JUDUL:
+    function set_edit_title(){
+    var id_to_do = $("#id_to_do").val();
+        $.ajax({
+            url:"<?php echo base_url() ?>index.php/tb_to_do_list/set_edit_title",
+            data:"id_to_do="+id_to_do,
+            success: function(html)
+            {
+              data = JSON.parse(html);
+              isi_tabel = '';
+              data.forEach(function(item, index){
+                  isi_tabel+=`
+                    <tr><td width='200'>TITLE </td><td><input type="text" class="form-control" name="title" id="title" value="`+ item.judul +`" /></td><td><a class="btn btn-light" style="color: black;"  onclick="edit_title()"><i class="fa fa-save" title="SAVE EDIT TITLE"></i></a></td></tr>
+                  `;
+
+              });                    
+              $('#for_title').html(isi_tabel);
+            }
+        });
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+FILE PHP ATAU CONTROLLER FUNGTION UNTUK SET_EDIT_TITLE:
+function set_edit_title(){
+        $id_to_do = $this->input->get('id_to_do');
+
+        $hasil=$this->db->query("SELECT * FROM tb_to_do_list WHERE id_to_do='$id_to_do'");
+        echo json_encode($hasil->result());
+    }
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+JAVASCRIPTNYA UNTUK MENAMPILKAN KEMBALI DATA TERBARU YANG SUDAH DIEDIT:
+ function edit_title(){
+    var id_to_do = $("#id_to_do").val();
+    var title = $("#title").val();
+        $.ajax({
+            url:"<?php echo base_url() ?>index.php/tb_to_do_list/edit_title_c",
+            data:"id_to_do="+id_to_do+"&title="+title,
+            success: function(html)
+            {
+              data = JSON.parse(html);
+              isi_tabel = '';
+              data.forEach(function(item, index){
+                  isi_tabel+=`
+                   <tr><td width='200'>TITLE </td><td>`+ item.judul +`<a class="btn btn-light" style="color: black;"  onclick="set_edit_title()"><i class="fa fa-pencil-square-o"></i></a></td></tr>
+                  `;
+
+              });                    
+              $('#for_title').html(isi_tabel);
+            }
+        });
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+FILE PHP/CONTROLLERNYA UNTUK UPDATE DATA DAN SELECT DATA TERBARU SETELAH DIEDIT:
+function edit_title_c(){
+        $id_to_do = $this->input->get('id_to_do');
+        $title = $this->input->get('title');
+
+        $update=$this->db->query("UPDATE tb_to_do_list SET judul='$title' WHERE id_to_do=$id_to_do");
+
+        $hasil=$this->db->query("SELECT * FROM tb_to_do_list WHERE id_to_do='$id_to_do'");
+        echo json_encode($hasil->result());
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////

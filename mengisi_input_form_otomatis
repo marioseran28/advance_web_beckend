@@ -1,0 +1,62 @@
+view atau tampilannya :
+ <tr><td width='200'>Nama Buku</td>
+                
+                <td>
+        <select name="id_buku" id="id_buku" onchange="pilih_buku()" style="width: 200px" class="form-control">
+                <option value="">--Pilih--</option>
+                <?php
+                $list = $this->db->query("SELECT * FROM tb_buku");
+                foreach($list->result() as $t){
+                ?>
+                  <option value="<?php echo $t->id_buku ?>" <?php if($id_member== "$t->id_buku"){ echo 'selected'; } ?>><?php echo $t->nama_buku ?></option>
+                  <?php } ?>
+                </select></td>
+
+             <td><input type="text" class="form-control" name="nama_penulis" style="width: 200px" id="nama_penulis" placeholder="Nama Penulis" /></td>
+         </tr>
+///////////////////////////////////////////////////////////////////////////
+javascriptnya:
+
+<script src="<?php echo base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/datatables/jquery.dataTables.js') ?>"></script>
+<script src="<?php echo base_url('assets/datatables/dataTables.bootstrap.js') ?>"></script>
+
+<script type="text/javascript">
+    // $(function() {
+
+    //     $("#id_buku").autocomplete({
+    //         source: "<?php echo base_url() ?>/index.php/peminjaman_buku/detail_buku",
+    //         minLength: 1
+    //     });       
+    // });
+
+     function pilih_buku(){
+        var id_buku = $("#id_buku").val();
+        $.ajax({
+            url:"<?php echo base_url() ?>index.php/peminjaman_buku/menampilkan_penulis",
+            data:"id_buku=" + id_buku ,
+            method: 'post',
+            dataType: 'json',
+                success: function(data)
+                {
+                    $("#nama_penulis").val(data.nama_penulis_b);
+                   
+                }
+            });    
+
+    }
+     $(function() {
+        $(document).ready(function() {
+    $('#id_buku').select2()
+        });    
+    });
+</script>
+///////////////////////////////////////////////////////////////////////////////////
+
+phpnya atau controllernya :
+function menampilkan_penulis(){
+        $id_buku = $_POST['id_buku'];
+        $s = "SELECT nama_penulis as nama_penulis_b FROM tb_buku WHERE id_buku='$id_buku'";
+    $res = $this->db->query($s)->row_array();
+    echo json_encode($res);
+    }

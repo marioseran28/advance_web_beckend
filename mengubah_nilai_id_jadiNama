@@ -1,0 +1,53 @@
+FORM EDIT DATA:
+
+
+<div class="content-wrapper">
+    
+    <section class="content">
+        <div class="box box-warning box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title"><?php echo $title; ?> PEMERIKSAAN</h3>
+            </div>
+            <form action="<?php echo $action; ?>" method="post">
+            
+<table class='table table-bordered'>        
+
+	    <tr><td width='200'>Id Pasien <?php echo form_error('id_pasien') ?></td><td><input type="text" class="form-control" name="id_pasien" id="id_pasien" placeholder="Id Pasien" value="<?php echo $id_pasien; ?>" /></td></tr>
+
+	    <tr><td width='200'>Id Obat <?php echo form_error('id_obat') ?></td><td><input type="text" class="form-control" name="id_obat" id="id_obat" placeholder="Id Obat" value="<?php echo $id_obat; ?>" /></td></tr>
+
+	    <tr><td width='200'>Keterangan <?php echo form_error('keterangan') ?></td><td><input type="text" class="form-control" name="keterangan" id="keterangan" placeholder="Keterangan" value="<?php echo $keterangan; ?>" /></td></tr>
+
+	    <tr><td></td><td><input type="hidden" name="id_pemeriksaan" value="<?php echo $id_pemeriksaan; ?>" /> 
+	    	
+	    <button type="submit" class="btn btn-danger"><i class="fa fa-floppy-o"></i> <?php echo $button ?></button> 
+	    <a href="<?php echo site_url('tb_pemeriksaan') ?>" class="btn btn-info"><i class="fa fa-sign-out"></i> Kembali</a></td></tr>
+	</table></form>        </div>
+</div>
+</div>
+
+//////////////////////////////////////////////////////////////////////////////////////
+TOMBOL UNTUK MENUJU KE FORM EDIT DATA
+ <a href="<?php echo site_url('tb_pemeriksaan/update/'.$tb_pemeriksaan->id_pemeriksaan); ?>" class="btn btn-warning btn-sm" data-popup="tooltip" data-placement="top" title="Update Data"><i class="fa fa-pencil-square-o"></i></a>
+ ////////////////////////////////////////////////////////////////////////////////////
+CONTROLLER UPDATE/EDIT
+ public function update($id) 
+    {
+         $Data_pemeriksaan = $this->db->query('SELECT * FROM tb_pemeriksaan 
+            INNER JOIN tb_pasien ON tb_pasien.id_pasien=tb_pemeriksaan.id_pasien
+            INNER JOIN tb_obat ON tb_obat.id_obat=tb_pemeriksaan.id_obat')->result();
+        foreach ($Data_pemeriksaan as $pemeriksaan) {
+
+            $data = array(
+                'title' => 'EDIT DATA',
+                'button' => 'Update',
+                'action' => site_url('tb_pemeriksaan/update_action'),
+		'id_pemeriksaan' => set_value('id_pemeriksaan', $pemeriksaan->id_pemeriksaan),
+		'id_pasien' => set_value('id_pasien', $pemeriksaan->nama_pasien),
+		'id_obat' => set_value('id_obat', $pemeriksaan->nama_obat),
+		'keterangan' => set_value('keterangan', $pemeriksaan->keterangan),
+	    );
+            $this->template->load('template','tb_pemeriksaan/tb_pemeriksaan_form', $data);
+
+    }
+}
